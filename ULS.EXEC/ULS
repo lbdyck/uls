@@ -24,11 +24,11 @@ do forever
   'DISPLAY PANEL(ULSMAIN)'
   drc = rc
   if drc > 4 then leave
-  'VGET (ZVERB ZSCROLLA ZSCROLLN)'
+  'VGET (ZVERB ZSCROLLA ZSCROLLN ZCURSOR ZCSROFF)'
 
   if zverb = 'UP' then do
     if zscrolla = 'MAX' then toprow = 1
-    else toprow = max(1, toprow - scroll_amount())
+    else toprow = max(1, toprow - scroll_amount('UP'))
     iterate
   end
   if zverb = 'DOWN' then do
@@ -37,7 +37,7 @@ do forever
     end
     else do
       maxrow = max(1, visible.0 - 9)
-      toprow = min(maxrow, toprow + scroll_amount())
+      toprow = min(maxrow, toprow + scroll_amount('DOWN'))
     end
     iterate
   end
@@ -96,11 +96,12 @@ do forever
       iterate
     end
     when command = 'UP' then do
-      toprow = max(1, toprow - scroll_amount())
+      toprow = max(1, toprow - scroll_amount('UP'))
       iterate
     end
     when command = 'DOWN' then do
-      toprow = min(max(1, visible.0 - 9), toprow + scroll_amount())
+      toprow = min(max(1, visible.0 - 9),,
+                   toprow + scroll_amount('DOWN'))
       iterate
     end
     when command = 'TOP' then do
@@ -219,7 +220,7 @@ make_area:
       ' ' || left(volumes.n, 6) || ' ' || left(migrated.n, 1) ||,
       ' ' || left(devices.n, 6)
     dynarea = dynarea || '04'x || left(line, 75)
-    dynshad = dynshad || ' _' || copies(' ', 74)
+    dynshad = dynshad || ' _o' || copies(' ', 73)
   end
   if dynarea = null then do
     dynarea = '02'x || left('No entries match the current filter.', 75)
@@ -230,8 +231,20 @@ make_area:
   return
 
 scroll_amount:
+  parse arg direction
   if translate(zscrolla) = 'PAGE' then return 9
   if datatype(zscrolla, 'W') then return max(1, zscrolla)
+  if translate(zscrolla) = 'CSR' then do
+    if datatype(zscrolln, 'W') & zscrolln > 0 then
+      return max(1, zscrolln)
+    if translate(zcursor) = 'DYNAREA' & datatype(zcsroff, 'W') then do
+      cursorline = max(1, min(10, ((zcsroff - 1) % 76) + 1))
+      if direction = 'UP' then
+        return max(1, shown - cursorline + 1)
+      return cursorline
+    end
+    return 9
+  end
   if datatype(zscrolln, 'W') then return max(1, zscrolln)
   return 9
 

@@ -3,6 +3,7 @@
   01 TYPE(DATAOUT) COLOR(WHITE)
   02 TYPE(DATAOUT) COLOR(YELLOW)
   _  TYPE(INPUT) INTENS(LOW) HILITE(USCORE) CAPS(ON)
+  o  TYPE(DATAOUT) COLOR(WHITE)
 )BODY
 %---------------- ULS - User List Services -------------------------------%
 %Command ===>_ZCMD                                    %Scroll ===>_Z    +
@@ -25,6 +26,8 @@
   VER(&LEVEL,DSNAME)
   IF (&ZSCROLLA NE 'PAGE' AND &ZSCROLLA NE 'CSR')
     VER(&ZSCROLLA,NB,RANGE,1,99999)
+  &ZCURSOR = .CURSOR
+  &ZCSROFF = .CSRPOS
 )FIELD
   FIELD(LEVEL) LEN(44)
   FIELD(ZSCROLLA) LEN(5)
