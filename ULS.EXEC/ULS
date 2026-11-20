@@ -42,6 +42,9 @@ do forever
     iterate
   end
 
+  call process_selections
+  if selected > 0 then iterate
+
   parse upper var zcmd command rest
   command = strip(command)
   rest = strip(rest)
@@ -93,11 +96,11 @@ do forever
       iterate
     end
     when command = 'UP' then do
-      toprow = max(1, toprow - 9)
+      toprow = max(1, toprow - scroll_amount())
       iterate
     end
     when command = 'DOWN' then do
-      toprow = min(max(1, visible.0 - 9), toprow + 9)
+      toprow = min(max(1, visible.0 - 9), toprow + scroll_amount())
       iterate
     end
     when command = 'TOP' then do
@@ -108,20 +111,8 @@ do forever
       toprow = max(1, visible.0 - 9)
       iterate
     end
-    when command = 'B' | command = 'BROWSE' then do
-      call operate 'BROWSE' rest
-      iterate
-    end
-    when command = 'E' | command = 'EDIT' then do
-      call operate 'EDIT' rest
-      iterate
-    end
-    when command = 'V' | command = 'VIEW' then do
-      call operate 'VIEW' rest
-      iterate
-    end
-    when command = 'I' | command = 'INFO' then do
-      call operate 'INFO' rest
+    when wordpos(command, 'B BROWSE E EDIT V VIEW I INFO') > 0 then do
+      status = 'Select B, E, V, or I in the row action field.'
       iterate
     end
     otherwise status = 'Unknown command. Enter HELP for command help.'
@@ -224,11 +215,11 @@ make_area:
   lastrow = min(visible.0, toprow + 9)
   do i = toprow to lastrow
     n = visible.i
-    line = '04'x || right(i, 5) || ' ' || left(names.n, 44) ||,
+    line = '   ' || right(i, 5) || ' ' || left(names.n, 44) ||,
       ' ' || left(volumes.n, 6) || ' ' || left(migrated.n, 1) ||,
       ' ' || left(devices.n, 6)
-    dynarea = dynarea || left(line, 76)
-    dynshad = dynshad || copies(' ', 76)
+    dynarea = dynarea || '04'x || left(line, 75)
+    dynshad = dynshad || ' _' || copies(' ', 74)
   end
   if dynarea = null then do
     dynarea = '02'x || left('No entries match the current filter.', 75)
@@ -239,8 +230,34 @@ make_area:
   return
 
 scroll_amount:
+  if translate(zscrolla) = 'PAGE' then return 9
+  if datatype(zscrolla, 'W') then return max(1, zscrolla)
   if datatype(zscrolln, 'W') then return max(1, zscrolln)
   return 9
+
+process_selections:
+  selected = 0
+  if loaded = 0 then return
+  lastrow = min(visible.0, toprow + 9)
+  do i = toprow to lastrow
+    offset = ((i - toprow) * 76) + 2
+    action = translate(substr(dynarea, offset, 1))
+    select
+      when action = 'B' then operation = 'BROWSE'
+      when action = 'E' then operation = 'EDIT'
+      when action = 'V' then operation = 'VIEW'
+      when action = 'I' then operation = 'INFO'
+      when action = ' ' then iterate
+      otherwise do
+        selected = selected + 1
+        status = 'Invalid row action' action '- use B, E, V, or I.'
+        return
+      end
+    end
+    selected = selected + 1
+    call operate operation, i
+  end
+  return
 
 set_sort:
   parse upper var rest key direction .
@@ -353,14 +370,9 @@ find_row:
   return
 
 operate:
-  parse arg operation rowtext
-  if \datatype(strip(rowtext), 'W') then do
-    status = operation 'requires a visible row number.'
-    return
-  end
-  rownum = strip(rowtext) + 0
+  parse arg operation, rownum
   if rownum < 1 | rownum > visible.0 then do
-    status = 'Row is outside the visible filtered list.'
+    status = 'Selected row is outside the current list.'
     return
   end
   n = visible.rownum

@@ -5,21 +5,26 @@
   _  TYPE(INPUT) INTENS(LOW) HILITE(USCORE) CAPS(ON)
 )BODY
 %---------------- ULS - User List Services -------------------------------%
-%Command ===>_ZCMD                                      %Scroll ===>_AMT+
+%Command ===>_ZCMD                                    %Scroll ===>_ZSCROLLA+
 +
  Data set level ===>_LEVEL
  Filter: &FILTER                  Sort: &SORTBY &SORTDIR
  Rows: &TOTAL displayed, &SHOWN on this page
 +
- Row   Data set name                            Volume  M Device
++Act Row  Data set name                                Volume M Device
 @DYNAREA,DYNSHAD                                                           @
 +
  &STATUS
 +
- BROWSE n | EDIT n | VIEW n | INFO n | FILTER text | SORT field [A|D]
- FIND text | RFIND | REFRESH | TOP | BOTTOM | HELP | TUTORIAL | END
+ Enter B/E/V/I in Act for Browse/Edit/View/Info. See HELP for commands.
 )INIT
-IF (&AMT EQ &Z)
-    &AMT = 'CSR'
+  IF (&ZSCROLLA = &Z) &ZSCROLLA = 'PAGE'
+  .ZVARS = '(LEVEL ZSCROLLA)'
 )PROC
+  VER(&LEVEL,DSNAME)
+  IF (&ZSCROLLA NE 'PAGE' AND &ZSCROLLA NE 'CSR')
+    VER(&ZSCROLLA,NB,RANGE,1,99999)
+)FIELD
+  FIELD(LEVEL) LEN(44)
+  FIELD(ZSCROLLA) LEN(5)
 )END

@@ -4,13 +4,12 @@
 %---------------- ISPF Tutorial 4 of 5: Actions --------------------------%
 %Command ===>_ZCMD
 +
- Action commands take the row number shown in the current filtered and
- sorted list. For example, BROWSE 3 acts on result 3, not necessarily
- the third row of the complete catalog listing.
+ Enter B, E, V, or I in the Act field beside a row and press Enter.
+ The action applies to that row in the filtered and sorted list.
 +
- BROWSE, EDIT, and VIEW call the corresponding ISPF services. INFO
- reports the volume, size, device, and migration indicator returned by
- LMDLIST. Use the main panel's displayed row order when choosing a row.
+ B calls Browse, E calls Edit, V calls View, and I displays volume,
+ size, device, and migration information. Multiple rows can be selected
+ together. Use the command field for list commands, not row actions.
 +
  ULS intentionally excludes delete, rename, copy, move, and allocation
  commands. Those operations can change catalog contents and require

@@ -11,6 +11,9 @@
  For example, SYS1 lists entries under SYS1; YOURID.PROJ narrows it
  further. The level is not a wildcard expression.
 +
+ The name must be unquoted and no longer than 44 characters. The scroll
+ field accepts a number, PAGE, or CSR.
++
  Use FILTER to reduce the returned names without another catalog scan.
  REFRESH repeats the catalog scan after catalog contents change.
 +

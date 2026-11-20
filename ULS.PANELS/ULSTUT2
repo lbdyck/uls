@@ -9,7 +9,8 @@
 +
  The panel binds that field to DYNAREA and DYNSHAD. Each row begins
  with an attribute byte so the exec can choose its display color.
- The shadow data is blank because list rows are display-only.
+ The shadow data marks the action column as an input field, allowing a
+ B, E, V, or I selection on each displayed row.
 +
  The exec rebuilds the visible slice before DISPLAY. Scroll verbs and
  the UP/DOWN commands move the first row; the dynamic area then shows

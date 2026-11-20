@@ -29,16 +29,15 @@ search the returned names.
 | `FIND text` / `RFIND` | Find or repeat a search in displayed names |
 | `SORT NAME|VOL|SIZE|DEVICE [A|D]` | Sort ascending or descending |
 | `UP`, `DOWN`, `TOP`, `BOTTOM` | Scroll the displayed list |
-| `BROWSE n` / `B n`, `EDIT n` / `E n`, `VIEW n` / `V n` | Open visible row `n` |
-| `INFO n` / `I n` | Show catalog details for visible row `n` |
+| Enter `B`, `E`, `V`, or `I` in a row's `Act` field | Browse, edit, view, or show catalog details |
 | `HELP` | Display command help |
 | `TUTORIAL` | Open the ISPF tutorial panels |
 | `END` | Exit |
 
-Row numbers are shown in the list and refer to the current filtered and
-sorted results. Browse, view, and info are read-only; EDIT can change data
-set contents. Allocation, rename, delete, copy, and move are intentionally
-not provided.
+The level field accepts an unquoted data set name up to 44 characters.
+The scroll field accepts a number, `PAGE`, or `CSR`. Browse, view, and info
+are read-only; EDIT can change data set contents. Allocation, rename,
+delete, copy, and move are intentionally not provided.
 
 ## Panels
 

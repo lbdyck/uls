@@ -13,17 +13,20 @@
    FIND text         Find a name; RFIND repeats the last search
    SORT NAME|VOL|SIZE|DEVICE [A|D]
                      Sort ascending or descending; no direction means A
-   BROWSE n          Browse visible row n
-   EDIT n            Edit visible row n
-   VIEW n            View visible row n
-   INFO n            Show volume, size, device, and migration status
+   B in Act          Browse the row
+   E in Act          Edit the row
+   V in Act          View the row
+   I in Act          Show volume, size, device, and migration status
    UP/DOWN/TOP/BOTTOM Scroll or reposition the list
+   Scroll field       Number, PAGE, or CSR
    REFRESH           Rebuild the list for the current level
    TUTORIAL          Open the ISPF tutorial panels
    END               Exit the dialog
 +
- Row numbers are relative to the filtered, sorted results. This dialog
- does not implement destructive or allocation operations.
+ The Act input field accepts B, E, V, or I. Row numbers are relative to
+ the filtered and sorted results. The command field does not run row
+ actions. This dialog does not implement destructive or allocation
+ operations.
 +
  Press Enter or F3 to return.
 )END
