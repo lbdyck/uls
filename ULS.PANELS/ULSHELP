@@ -1,9 +1,12 @@
 )ATTR
   _ TYPE(INPUT) INTENS(LOW) HILITE(USCORE) CAPS(ON)
-)BODY
+ # area(scrl) extend(on)
+)body
 %------------------------- ULS Command Help ------------------------------%
 %Command ===>_ZCMD
 +
+#help                                                                          #
+)area help
  Enter a catalog level on the main panel. ULS lists cataloged data sets
  below that level using the ISPF LMDLIST service.
 +

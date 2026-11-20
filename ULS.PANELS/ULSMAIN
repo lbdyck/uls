@@ -5,11 +5,11 @@
   _  TYPE(INPUT) INTENS(LOW) HILITE(USCORE) CAPS(ON)
 )BODY
 %---------------- ULS - User List Services -------------------------------%
-%Command ===>_ZCMD                                    %Scroll ===>_ZSCROLLA+
+%Command ===>_ZCMD                                    %Scroll ===>_Z    +
 +
- Data set level ===>_LEVEL
- Filter: &FILTER                  Sort: &SORTBY &SORTDIR
- Rows: &TOTAL displayed, &SHOWN on this page
++Data set level ===>_LEVEL                                       +
++Filter: &FILTER                  Sort: &SORTBY &SORTDIR
++Rows: &TOTAL displayed, &SHOWN on this page
 +
 +Act Row  Data set name                                Volume M Device
 @DYNAREA,DYNSHAD                                                           @
@@ -19,7 +19,8 @@
  Enter B/E/V/I in Act for Browse/Edit/View/Info. See HELP for commands.
 )INIT
   IF (&ZSCROLLA = &Z) &ZSCROLLA = 'PAGE'
-  .ZVARS = '(LEVEL ZSCROLLA)'
+  .ZVARS = '(ZSCROLLA)'
+  .HELP = ULSHELP
 )PROC
   VER(&LEVEL,DSNAME)
   IF (&ZSCROLLA NE 'PAGE' AND &ZSCROLLA NE 'CSR')
