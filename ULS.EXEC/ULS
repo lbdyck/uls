@@ -392,7 +392,7 @@ operate:
   if operation = 'INFO' then do
     diname = names.n
     divol = volumes.n
-    dcatsize = sizes.n
+    dcatsize = strip(sizes.n)
     didev = devices.n
     dmig = migrated.n
     ddsorg = ''

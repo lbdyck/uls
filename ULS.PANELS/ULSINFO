@@ -6,20 +6,20 @@
 )AREA INFO
 +Data set name . . . . . &DINAME
 +Volume serial . . . . . &DIVOL
-+LMD size . . . . . . . . &DCATSIZE
++LMD size . . . . . . . .&DCATSIZE
 +Device type . . . . . . &DIDEV
-+Migrated . . . . . . . . &DMIG
++Migrated . . . . . . . .&DMIG
 +DSORG . . . . . . . . . &DDSORG
 +Data set type . . . . . &DDTYPE
 +RECFM . . . . . . . . . &DRECFM
 +LRECL . . . . . . . . . &DLRECL
 +BLKSIZE . . . . . . . . &DBLKSZ
-+Key length . . . . . . &DKEYLEN
++Key length . . . . . .  &DKEYLEN
 +Space units . . . . . . &DUNITS
-+Primary allocation . . &DPRIMARY
-+Secondary allocation . &DSECOND
++Primary allocation . .  &DPRIMARY
++Secondary allocation .  &DSECOND
 +Total allocated . . . . &DALLOC
-+Used . . . . . . . . . . &DUSED
++Used . . . . . . . . . .&DUSED
 +PDSE used pages . . . . &DUPAGES
 +Extents . . . . . . . . &DEXTENTS
 +Created . . . . . . . . &DCREATE
@@ -27,7 +27,7 @@
 +Expires . . . . . . . . &DEXPIRE
 +Updated . . . . . . . . &DUPDATE
 +Password protection . . &DPASS
-+RACF . . . . . . . . . . &DRACF
++RACF . . . . . . . . . .&DRACF
 +LISTDSI return code . . &DSIRC
 +Reason code . . . . . . &DREASON
 +Message 1 . . . . . . . &DMSG1
