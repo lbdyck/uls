@@ -1,0 +1,18 @@
+)ATTR
+  _ TYPE(INPUT) INTENS(LOW) HILITE(USCORE) CAPS(ON)
+)BODY
+%---------------- ISPF Tutorial 5 of 5: Install and Test -----------------%
+%Command ===>_ZCMD
++
+ Put the ULS exec in SYSEXEC or SYSPROC and all ULS panel members in
+ a library allocated to ISPPLIB. Invoke ULS from an active ISPF session.
++
+ Start with a small catalog level that you are authorized to list.
+ Try FILTER, SORT, FIND, scrolling, and INFO before opening a data set.
++
+ Validate the panel source record format, code page, dynamic-area width,
+ and LMDLIST statistics at your z/OS installation. Browse, edit, and view
+ behavior depends on your ISPF release and data set access authority.
++
+ Enter PREV, 1-4, or END to navigate.
+)END

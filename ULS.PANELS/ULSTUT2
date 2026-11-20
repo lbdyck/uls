@@ -1,0 +1,19 @@
+)ATTR
+  _ TYPE(INPUT) INTENS(LOW) HILITE(USCORE) CAPS(ON)
+)BODY
+%---------------- ISPF Tutorial 2 of 5: Dynamic Areas --------------------%
+%Command ===>_ZCMD
++
+ ULS uses an AREA(DYNAMIC) field. The exec builds fixed-width records
+ containing a data set name, volume, migration flag, and device.
++
+ The panel binds that field to DYNAREA and DYNSHAD. Each row begins
+ with an attribute byte so the exec can choose its display color.
+ The shadow data is blank because list rows are display-only.
++
+ The exec rebuilds the visible slice before DISPLAY. Scroll verbs and
+ the UP/DOWN commands move the first row; the dynamic area then shows
+ the new slice.
++
+ Enter NEXT, PREV, 1-5, or END to navigate.
+)END

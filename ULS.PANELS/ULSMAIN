@@ -1,0 +1,25 @@
+)ATTR
+  @ AREA(DYNAMIC) SCROLL(ON) EXTEND(ON)
+  01 TYPE(DATAOUT) COLOR(WHITE)
+  02 TYPE(DATAOUT) COLOR(YELLOW)
+  _  TYPE(INPUT) INTENS(LOW) HILITE(USCORE) CAPS(ON)
+)BODY
+%---------------- ULS - User List Services -------------------------------%
+%Command ===>_ZCMD                                      %Scroll ===>_AMT+
++
+ Data set level ===>_LEVEL
+ Filter: &FILTER                  Sort: &SORTBY &SORTDIR
+ Rows: &TOTAL displayed, &SHOWN on this page
++
+ Row   Data set name                            Volume  M Device
+@DYNAREA,DYNSHAD                                                           @
++
+ &STATUS
++
+ BROWSE n | EDIT n | VIEW n | INFO n | FILTER text | SORT field [A|D]
+ FIND text | RFIND | REFRESH | TOP | BOTTOM | HELP | TUTORIAL | END
+)INIT
+  &AMT = 'PAGE'
+  .ZVARS = '(LEVEL)'
+)PROC
+)END

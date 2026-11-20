@@ -1,0 +1,406 @@
+/* REXX - Dynamic-area data set list dialog. */
+parse upper arg level .
+address ispexec
+
+null = ''
+if level = null then level = ''
+filter = ''
+findtext = ''
+sortby = 'NAME'
+sortdir = 'A'
+toprow = 1
+findrow = 0
+loaded = 0
+listopen = 0
+rows.0 = 0
+visible.0 = 0
+status = 'Enter a catalog level and press Enter.'
+if level <> null then call load_list
+
+do forever
+  call make_visible
+  call make_area
+  zcmd = ''
+  'DISPLAY PANEL(ULSMAIN)'
+  drc = rc
+  if drc > 4 then leave
+  'VGET (ZVERB ZSCROLLA ZSCROLLN)'
+
+  if zverb = 'UP' then do
+    if zscrolla = 'MAX' then toprow = 1
+    else toprow = max(1, toprow - scroll_amount())
+    iterate
+  end
+  if zverb = 'DOWN' then do
+    if zscrolla = 'MAX' then do
+      toprow = max(1, visible.0 - 9)
+    end
+    else do
+      maxrow = max(1, visible.0 - 9)
+      toprow = min(maxrow, toprow + scroll_amount())
+    end
+    iterate
+  end
+
+  parse upper var zcmd command rest
+  command = strip(command)
+  rest = strip(rest)
+  if command = null then do
+    level = translate(strip(level))
+    if loaded = 0 then call load_list
+    else if level <> oldlevel then call load_list
+    iterate
+  end
+
+  select
+    when command = 'END' or command = 'CANCEL' then leave
+    when command = 'HELP' then do
+      'DISPLAY PANEL(ULSHELP)'
+      iterate
+    end
+    when command = 'TUTORIAL' or command = 'TUT' then do
+      call tutorial
+      iterate
+    end
+    when command = 'REFRESH' then do
+      call load_list
+      iterate
+    end
+    when command = 'FILTER' then do
+      if translate(rest) = 'CLEAR' | rest = null then filter = null
+      else filter = translate(rest)
+      toprow = 1
+      findrow = 0
+      status = 'Filter updated.'
+      iterate
+    end
+    when command = 'FIND' then do
+      findtext = translate(rest)
+      findrow = toprow - 1
+      call find_row
+      iterate
+    end
+    when command = 'RFIND' then do
+      if findtext = null then status = 'Use FIND text before RFIND.'
+      else call find_row
+      iterate
+    end
+    when command = 'SORT' then do
+      call set_sort
+      call sort_rows
+      call make_visible
+      toprow = 1
+      iterate
+    end
+    when command = 'UP' then do
+      toprow = max(1, toprow - 9)
+      iterate
+    end
+    when command = 'DOWN' then do
+      toprow = min(max(1, visible.0 - 9), toprow + 9)
+      iterate
+    end
+    when command = 'TOP' then do
+      toprow = 1
+      iterate
+    end
+    when command = 'BOTTOM' then do
+      toprow = max(1, visible.0 - 9)
+      iterate
+    end
+    when command = 'B' | command = 'BROWSE' then do
+      call operate 'BROWSE' rest
+      iterate
+    end
+    when command = 'E' | command = 'EDIT' then do
+      call operate 'EDIT' rest
+      iterate
+    end
+    when command = 'V' | command = 'VIEW' then do
+      call operate 'VIEW' rest
+      iterate
+    end
+    when command = 'I' | command = 'INFO' then do
+      call operate 'INFO' rest
+      iterate
+    end
+    otherwise status = 'Unknown command. Enter HELP for command help.'
+  end
+end
+
+if listopen then 'LMDFREE LISTID('lmd')'
+exit 0
+
+load_list:
+  level = translate(strip(level))
+  if \valid_level(level) then do
+    status = 'Enter a valid catalog level (for example SYS1).'
+    loaded = 0
+    return
+  end
+  if listopen then do
+    'LMDFREE LISTID('lmd')'
+    listopen = 0
+  end
+  rows.0 = 0
+  visible.0 = 0
+  findrow = 0
+  'LMDINIT LISTID(LMD) LEVEL('level')'
+  lrc = rc
+  if lrc > 0 then do
+    status = 'LMDINIT failed, return code' lrc'.'
+    loaded = 0
+    return
+  end
+  listopen = 1
+  do forever
+    dsn = ''
+    'LMDLIST LISTID('lmd') STATS(YES) DATASET(DSN) OPTION(LIST)'
+    lrc = rc
+    if lrc > 0 then leave
+    rows.0 = rows.0 + 1
+    n = rows.0
+    names.n = dsn
+    volumes.n = zdlvol
+    sizes.n = zdlsize
+    devices.n = zdldev
+    migrated.n = zdlmigr
+  end
+  'LMDFREE LISTID('lmd')'
+  listopen = 0
+  if lrc > 8 then do
+    status = 'LMDLIST failed, return code' lrc'.'
+    loaded = 0
+    return
+  end
+  oldlevel = level
+  loaded = 1
+  call sort_rows
+  call make_visible
+  toprow = 1
+  if rows.0 = 0 then status = 'No data sets found for' level'.'
+  else status = rows.0 'catalog entries loaded.'
+  return
+
+valid_level:
+  procedure
+  parse arg value
+  allowed = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@$#.'
+  if value = '' | length(value) > 44 then return 0
+  if verify(value, allowed) > 0 then return 0
+  if left(value, 1) = '.' | right(value, 1) = '.' then return 0
+  if pos('..', value) > 0 then return 0
+  do i = 1 to words(translate(value, ' ', '.'))
+    qualifier = word(translate(value, ' ', '.'), i)
+    if length(qualifier) > 8 then return 0
+    firstchar = left(qualifier, 1)
+    validfirst = pos(firstchar, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ@$#')
+    if validfirst = 0 then return 0
+  end
+  return 1
+
+make_visible:
+  visible.0 = 0
+  do i = 1 to rows.0
+    if filter = null | pos(filter, translate(names.i)) > 0 then do
+      visible.0 = visible.0 + 1
+      n = visible.0
+      visible.n = i
+    end
+  end
+  if toprow > max(1, visible.0) then toprow = max(1, visible.0)
+  return
+
+make_area:
+  dynarea = ''
+  dynshad = ''
+  if loaded = 0 then do
+    dynarea = '04'x || left(status, 75)
+    dynshad = copies(' ', 76)
+    shown = 0
+    total = 0
+    return
+  end
+  lastrow = min(visible.0, toprow + 9)
+  do i = toprow to lastrow
+    n = visible.i
+    line = '04'x || right(i, 5) || ' ' || left(names.n, 44) ||,
+      ' ' || left(volumes.n, 6) || ' ' || left(migrated.n, 1) ||,
+      ' ' || left(devices.n, 6)
+    dynarea = dynarea || left(line, 76)
+    dynshad = dynshad || copies(' ', 76)
+  end
+  if dynarea = null then do
+    dynarea = '02'x || left('No entries match the current filter.', 75)
+    dynshad = copies(' ', 76)
+  end
+  shown = min(10, visible.0 - toprow + 1)
+  total = visible.0
+  return
+
+scroll_amount:
+  if datatype(zscrolln, 'W') then return max(1, zscrolln)
+  return 9
+
+set_sort:
+  parse upper var rest key direction .
+  if key = null then do
+    if sortdir = 'A' then sortdir = 'D'
+    else sortdir = 'A'
+  end
+  else do
+    if wordpos(key, 'NAME VOL SIZE DEVICE') = 0 then do
+      status = 'SORT fields: NAME, VOL, SIZE, DEVICE.'
+      return
+    end
+    sortby = key
+    if direction = 'A' | direction = 'D' then sortdir = direction
+    else sortdir = 'A'
+  end
+  status = 'Sorted by' sortby sortdir'.'
+  return
+
+sort_rows:
+  gap = rows.0 % 2
+  do while gap > 0
+    do i = gap + 1 to rows.0
+      j = i
+      do while j > gap
+        k = j - gap
+        if \sort_after(k, j) then leave
+        call swap_rows k, j
+        j = k
+      end
+    end
+    gap = gap % 2
+  end
+  return
+
+sort_after:
+  procedure expose sortby sortdir names. volumes. sizes. devices.
+  parse arg a, b
+  select
+    when sortby = 'VOL' then do
+      first = translate(volumes.a)
+      second = translate(volumes.b)
+    end
+    when sortby = 'SIZE' then do
+      first = right('0000000000' || strip(sizes.a), 10, '0')
+      second = right('0000000000' || strip(sizes.b), 10, '0')
+    end
+    when sortby = 'DEVICE' then do
+      first = translate(devices.a)
+      second = translate(devices.b)
+    end
+    otherwise do
+      first = translate(names.a)
+      second = translate(names.b)
+    end
+  end
+  if sortdir = 'A' then return first > second
+  return first < second
+
+swap_rows:
+  parse arg a, b
+  temp = names.a
+  names.a = names.b
+  names.b = temp
+  temp = volumes.a
+  volumes.a = volumes.b
+  volumes.b = temp
+  temp = sizes.a
+  sizes.a = sizes.b
+  sizes.b = temp
+  temp = devices.a
+  devices.a = devices.b
+  devices.b = temp
+  temp = migrated.a
+  migrated.a = migrated.b
+  migrated.b = temp
+  return
+
+find_row:
+  if findtext = null then do
+    status = 'FIND requires a search string.'
+    return
+  end
+  if visible.0 = 0 then do
+    status = 'No entries to search.'
+    return
+  end
+  start = min(visible.0, findrow + 1)
+  found = 0
+  do i = start to visible.0
+    n = visible.i
+    if pos(findtext, translate(names.n)) > 0 then do
+      toprow = i
+      findrow = i
+      found = 1
+      leave
+    end
+  end
+  if found = 0 then do i = 1 to min(visible.0, start - 1)
+    n = visible.i
+    if pos(findtext, translate(names.n)) > 0 then do
+      toprow = i
+      findrow = i
+      found = 1
+      leave
+    end
+  end
+  if found then status = 'Found' findtext 'at row' toprow'.'
+  else status = 'Not found:' findtext
+  return
+
+operate:
+  parse arg operation rowtext
+  if \datatype(strip(rowtext), 'W') then do
+    status = operation 'requires a visible row number.'
+    return
+  end
+  rownum = strip(rowtext) + 0
+  if rownum < 1 | rownum > visible.0 then do
+    status = 'Row is outside the visible filtered list.'
+    return
+  end
+  n = visible.rownum
+  if operation = 'INFO' then do
+    zedsmsg = 'Data set information'
+    zedlmsg = names.n 'VOL='volumes.n 'SIZE='sizes.n,
+      'DEVICE='devices.n 'MIG='migrated.n
+    'SETMSG MSG(ISRZ001)'
+    status = 'Information shown in the ISPF message area.'
+    return
+  end
+  if operation = 'BROWSE' then
+    'BROWSE DATASET(' || "'" || names.n || "')"
+  else if operation = 'EDIT' then
+    'EDIT DATASET(' || "'" || names.n || "')"
+  else if operation = 'VIEW' then
+    'VIEW DATASET(' || "'" || names.n || "')"
+  oprc = rc
+  if oprc > 4 then status = operation 'failed, return code' oprc'.'
+  else status = operation names.n
+  return
+
+tutorial:
+  page = 1
+  do forever
+    panel = 'ULSTUT' || page
+    zcmd = ''
+    'DISPLAY PANEL('panel')'
+    if rc > 4 then leave
+    parse upper var zcmd nextcmd .
+    select
+      when nextcmd = 'NEXT' then page = min(5, page + 1)
+      when nextcmd = 'PREV' then page = max(1, page - 1)
+      when nextcmd = 'END' | nextcmd = 'RETURN' then leave
+      when nextcmd = '1' then page = 1
+      when nextcmd = '2' then page = 2
+      when nextcmd = '3' then page = 3
+      when nextcmd = '4' then page = 4
+      when nextcmd = '5' then page = 5
+      otherwise nop
+    end
+  end
+  return

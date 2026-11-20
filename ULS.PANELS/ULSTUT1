@@ -1,0 +1,18 @@
+)ATTR
+  _ TYPE(INPUT) INTENS(LOW) HILITE(USCORE) CAPS(ON)
+)BODY
+%---------------- ISPF Tutorial 1 of 5: The Dialog -----------------------%
+%Command ===>_ZCMD
++
+ ULS is a REXX exec driven by ISPF services. The exec opens a catalog
+ list, displays a panel, processes a command, and redisplays the panel.
++
+ The list is limited by the catalog level entered on the main panel.
+ For example, SYS1 lists entries under SYS1; YOURID.PROJ narrows it
+ further. The level is not a wildcard expression.
++
+ Use FILTER to reduce the returned names without another catalog scan.
+ REFRESH repeats the catalog scan after catalog contents change.
++
+ Enter NEXT, PREV, 2-5, or END to navigate these tutorial pages.
+)END

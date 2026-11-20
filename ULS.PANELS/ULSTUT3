@@ -1,0 +1,20 @@
+)ATTR
+  _ TYPE(INPUT) INTENS(LOW) HILITE(USCORE) CAPS(ON)
+)BODY
+%---------------- ISPF Tutorial 3 of 5: Filtering and Sorting ------------%
+%Command ===>_ZCMD
++
+ FILTER text performs a case-insensitive substring match on data set
+ names. FILTER CLEAR restores the full catalog result set.
++
+ SORT accepts NAME, VOL, SIZE, or DEVICE. Add A for ascending or D
+ for descending order. For example:
++
+   SORT VOL A
+   SORT SIZE D
++
+ FIND text searches names in the current filtered result set.
+ RFIND repeats the most recent FIND and wraps at the end.
++
+ Enter NEXT, PREV, 1-5, or END to navigate.
+)END

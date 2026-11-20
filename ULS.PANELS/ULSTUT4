@@ -1,0 +1,20 @@
+)ATTR
+  _ TYPE(INPUT) INTENS(LOW) HILITE(USCORE) CAPS(ON)
+)BODY
+%---------------- ISPF Tutorial 4 of 5: Actions --------------------------%
+%Command ===>_ZCMD
++
+ Action commands take the row number shown in the current filtered and
+ sorted list. For example, BROWSE 3 acts on result 3, not necessarily
+ the third row of the complete catalog listing.
++
+ BROWSE, EDIT, and VIEW call the corresponding ISPF services. INFO
+ reports the volume, size, device, and migration indicator returned by
+ LMDLIST. Use the main panel's displayed row order when choosing a row.
++
+ ULS intentionally excludes delete, rename, copy, move, and allocation
+ commands. Those operations can change catalog contents and require
+ additional installation-specific validation.
++
+ Enter NEXT, PREV, 1-5, or END to navigate.
+)END
