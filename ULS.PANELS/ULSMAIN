@@ -19,13 +19,13 @@
 +
  Enter B/E/V/I in Act for Browse/Edit/View/Info. See HELP for commands.
 )INIT
-  IF (&ZSCROLLA = &Z) &ZSCROLLA = 'PAGE'
+  IF (&ZSCROLLA = &Z)
+      &ZSCROLLA = 'CSR'
   .ZVARS = '(ZSCROLLA)'
   .HELP = ULSHELP
 )PROC
   VER(&LEVEL,DSNAME)
-  IF (&ZSCROLLA NE 'PAGE' AND &ZSCROLLA NE 'CSR')
-    VER(&ZSCROLLA,NB,RANGE,1,99999)
+  &SCR = trans(trunc(&zscrolla,1) P,PAGE C,CSR *,*)
   &ZCURSOR = .CURSOR
   &ZCSROFF = .CSRPOS
 )FIELD
