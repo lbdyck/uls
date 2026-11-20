@@ -24,7 +24,7 @@ do forever
   'DISPLAY PANEL(ULSMAIN)'
   drc = rc
   if drc > 4 then leave
-  'VGET (ZVERB ZSCROLLA ZSCROLLN ZCURSOR ZCSROFF DYNAREA)'
+  'VGET (ZVERB ZSCROLLA ZSCROLLN ZCURSOR ZCSROFF)'
 
   if zverb = 'UP' then do
     if zscrolla = 'MAX' then toprow = 1
@@ -219,8 +219,8 @@ make_area:
     line = '   ' || right(i, 5) || ' ' || left(names.n, 44) ||,
       ' ' || left(volumes.n, 6) || ' ' || left(migrated.n, 1) ||,
       ' ' || left(devices.n, 6)
-    dynarea = dynarea || '03'x || ' ' || '04'x || left(line, 74)
-    dynshad = dynshad || copies(' ', 77)
+    dynarea = dynarea || '03'x || ' ' || '04'x || left(line, 73)
+    dynshad = dynshad || copies(' ', 76)
   end
   if dynarea = null then do
     dynarea = '02'x || left('No entries match the current filter.', 75)
@@ -238,7 +238,7 @@ scroll_amount:
     if datatype(zscrolln, 'W') & zscrolln > 0 then
       return max(1, zscrolln)
     if translate(zcursor) = 'DYNAREA' & datatype(zcsroff, 'W') then do
-      cursorline = max(1, min(10, ((zcsroff - 1) % 77) + 1))
+      cursorline = max(1, min(10, ((zcsroff - 1) % 76) + 1))
       if direction = 'UP' then
         return max(1, shown - cursorline + 1)
       return cursorline
@@ -253,7 +253,7 @@ process_selections:
   if loaded = 0 then return
   lastrow = min(visible.0, toprow + 9)
   do i = toprow to lastrow
-    offset = ((i - toprow) * 77) + 2
+    offset = ((i - toprow) * 76) + 2
     action = translate(substr(dynarea, offset, 1))
     select
       when action = 'B' then operation = 'BROWSE'
