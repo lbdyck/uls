@@ -1,0 +1,40 @@
+)ATTR
+  # AREA(SCRL) EXTEND(ON)
+)BODY
+%---------------- ULS Data Set Information -------------------------------%
+#INFO                                                                          #
+)AREA INFO
++Data set name . . . . . &DINAME
++Volume serial . . . . . &DIVOL
++LMD size . . . . . . . . &DCATSIZE
++Device type . . . . . . &DIDEV
++Migrated . . . . . . . . &DMIG
++DSORG . . . . . . . . . &DDSORG
++Data set type . . . . . &DDTYPE
++RECFM . . . . . . . . . &DRECFM
++LRECL . . . . . . . . . &DLRECL
++BLKSIZE . . . . . . . . &DBLKSZ
++Key length . . . . . . &DKEYLEN
++Space units . . . . . . &DUNITS
++Primary allocation . . &DPRIMARY
++Secondary allocation . &DSECOND
++Total allocated . . . . &DALLOC
++Used . . . . . . . . . . &DUSED
++PDSE used pages . . . . &DUPAGES
++Extents . . . . . . . . &DEXTENTS
++Created . . . . . . . . &DCREATE
++Last referenced . . . . &DREF
++Expires . . . . . . . . &DEXPIRE
++Updated . . . . . . . . &DUPDATE
++Password protection . . &DPASS
++RACF . . . . . . . . . . &DRACF
++LISTDSI return code . . &DSIRC
++Reason code . . . . . . &DREASON
++Message 1 . . . . . . . &DMSG1
++Message 2 . . . . . . . &DMSG2
++&DSTATUS
++
++Press Enter or F3 to return to the list.
+)INIT
+  .HELP = ULSHELP
+)END

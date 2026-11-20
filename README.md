@@ -41,10 +41,15 @@ delete, copy, and move are intentionally not provided.
 
 ## Panels
 
-`ULSMAIN` is the dynamic-area list. `ULSHELP` describes the commands.
+`ULSMAIN` is the dynamic-area list, `ULSINFO` displays scrollable data set
+attributes, and `ULSHELP` describes the commands.
 `ULSTUT1` through `ULSTUT5` are short tutorial pages covering dialog setup,
 dynamic areas, list filtering, navigation, and testing.
 
 The dialog requires ISPF and a TSO environment. It has not been run on a z/OS
 system in this workspace; verify panel-library attributes and ISPF service
 behavior at the target installation.
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE).

@@ -19,7 +19,7 @@
    B in Act          Browse the row
    E in Act          Edit the row
    V in Act          View the row
-   I in Act          Show volume, size, device, and migration status
+   I in Act          Show data set details
    UP/DOWN/TOP/BOTTOM Scroll or reposition the list
    Scroll field       Number, PAGE, or CSR
    REFRESH           Rebuild the list for the current level

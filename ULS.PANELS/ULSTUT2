@@ -10,6 +10,8 @@
  The panel binds that field to DYNAREA and DYNSHAD. Each row starts
  with a DATAIN attribute for the one-character action field, followed
  by DATAOUT for the row text. DYNSHAD supplies optional display styling.
+ B, E, and V open the selected data set. I opens a scrollable details
+ panel with its organization, DCB, space allocation, and status.
 +
  The exec rebuilds the visible slice before DISPLAY. Scroll verbs and
  the UP/DOWN commands move the first row; the dynamic area then shows

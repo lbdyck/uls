@@ -216,7 +216,7 @@ make_area:
   lastrow = min(visible.0, toprow + 9)
   do i = toprow to lastrow
     n = visible.i
-    line = '   ' || right(i, 5) || ' ' || left(names.n, 44) ||,
+    line = '   ' || right(i, 3) || '  ' || left(names.n, 44) ||,
       ' ' || left(volumes.n, 6) || ' ' || left(migrated.n, 1) ||,
       ' ' || left(devices.n, 6)
     dynarea = dynarea || '03'x || ' ' || '04'x || left(line, 73)
@@ -390,11 +390,88 @@ operate:
   end
   n = visible.rownum
   if operation = 'INFO' then do
-    zedsmsg = 'Data set information'
-    zedlmsg = names.n 'VOL='volumes.n 'SIZE='sizes.n,
-      'DEVICE='devices.n 'MIG='migrated.n
-    'SETMSG MSG(ISRZ001)'
-    status = 'Information shown in the ISPF message area.'
+    diname = names.n
+    divol = volumes.n
+    dcatsize = sizes.n
+    didev = devices.n
+    dmig = migrated.n
+    ddsorg = ''
+    ddtype = ''
+    drecfm = ''
+    dlrecl = ''
+    dblksz = ''
+    dkeylen = ''
+    dunits = ''
+    dprimary = ''
+    dsecond = ''
+    dalloc = ''
+    dused = ''
+    dupages = ''
+    dextents = ''
+    dcreate = ''
+    dref = ''
+    dexpire = ''
+    dupdate = ''
+    dpass = ''
+    dracf = ''
+    dreason = ''
+    dmsg1 = ''
+    dmsg2 = ''
+    sysdsorg = ''
+    sysdssms = ''
+    sysrecfm = ''
+    syslrecl = ''
+    sysblksize = ''
+    syskeylen = ''
+    sysunits = ''
+    sysprimary = ''
+    sysseconds = ''
+    sysalloc = ''
+    sysused = ''
+    sysusedpages = ''
+    sysextents = ''
+    syscreate = ''
+    sysrefdate = ''
+    sysexdate = ''
+    sysupdated = ''
+    syspassword = ''
+    sysracfa = ''
+    sysreason = ''
+    sysmsglvl1 = ''
+    sysmsglvl2 = ''
+    dsirc = listdsi("'" || names.n || "' NORECALL NODIRECTORY NOSMSINFO")
+    dreason = sysreason
+    dmsg1 = sysmsglvl1
+    dmsg2 = sysmsglvl2
+    if dsirc <= 4 then do
+      ddsorg = sysdsorg
+      ddtype = sysdssms
+      drecfm = sysrecfm
+      dlrecl = syslrecl
+      dblksz = sysblksize
+      dkeylen = syskeylen
+      dunits = sysunits
+      dprimary = sysprimary
+      dsecond = sysseconds
+      dalloc = sysalloc
+      dused = sysused
+      dupages = sysusedpages
+      dextents = sysextents
+      dcreate = syscreate
+      dref = sysrefdate
+      dexpire = sysexdate
+      dupdate = sysupdated
+      dpass = syspassword
+      dracf = sysracfa
+      if dsirc = 0 then
+        dstatus = 'All available data set information retrieved.'
+      else dstatus = 'Some attributes are unavailable; see reason and messages.'
+    end
+    else dstatus = 'LISTDSI failed; DCB and space details are unavailable.'
+    'DISPLAY PANEL(ULSINFO)'
+    if rc > 8 then
+      status = 'Information panel failed, return code' rc'.'
+    else status = 'Information displayed for' names.n'.'
     return
   end
   if operation = 'BROWSE' then
