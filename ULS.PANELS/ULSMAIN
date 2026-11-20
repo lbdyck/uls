@@ -19,7 +19,7 @@
  BROWSE n | EDIT n | VIEW n | INFO n | FILTER text | SORT field [A|D]
  FIND text | RFIND | REFRESH | TOP | BOTTOM | HELP | TUTORIAL | END
 )INIT
-  &AMT = 'PAGE'
-  .ZVARS = '(LEVEL)'
+IF (&AMT EQ &Z)
+    &AMT = 'CSR'
 )PROC
 )END

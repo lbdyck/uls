@@ -1,0 +1,25 @@
+  /* --------------------  rexx procedure  -------------------- *
+  | Name:      ULS Stub                                        |
+  |                                                            |
+  | Function:  Allocate the ULS Libraries and then             |
+  |            invoke the ULS application.                     |
+  |                                                            |
+  | Syntax:    %$stub                                          |
+  |                                                            |
+  | Usage Notes: 1. Copy into a library in the standard        |
+  |                 SYSEXEC (or SYSPROC) allocations for the   |
+  |                 intended users.                            |
+  |              2. Tailor the HLQ variable for the ULS        |
+  |                 high-level-qualifier.                      |
+  |                                                            |
+  * ---------------------------------------------------------- */
+  hlq = 'lbdyck'   /* <=== Change this variable */
+
+  Address TSO
+  "Altlib Act App(Exec) Dataset('"hlq".ULS.exec')"
+  Address ISPExec
+  "Libdef ISPPLIB Dataset ID('"hlq".ULS.panels') stack"
+  "Select Cmd(%uls) Passlib NewAppl(uls)"
+  "Libdef ISPPLIB"
+  Address TSO
+  "Altlib DeAct App(Exec)"
