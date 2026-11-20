@@ -2,8 +2,9 @@
   @ AREA(DYNAMIC) SCROLL(ON) EXTEND(ON)
   01 TYPE(DATAOUT) COLOR(WHITE)
   02 TYPE(DATAOUT) COLOR(YELLOW)
+  03 TYPE(DATAIN) INTENS(LOW) HILITE(USCORE) CAPS(ON)
+  04 TYPE(DATAOUT) COLOR(WHITE)
   _  TYPE(INPUT) INTENS(LOW) HILITE(USCORE) CAPS(ON)
-  o  TYPE(DATAOUT) COLOR(WHITE)
 )BODY
 %---------------- ULS - User List Services -------------------------------%
 %Command ===>_ZCMD                                    %Scroll ===>_Z    +
@@ -25,7 +26,7 @@
   .HELP = ULSHELP
 )PROC
   VER(&LEVEL,DSNAME)
-  &SCR = trans(trunc(&zscrolla,1) P,PAGE C,CSR *,*)
+  &ZSCROLLA = trans(trunc(&zscrolla,1) P,PAGE C,CSR *,*)
   &ZCURSOR = .CURSOR
   &ZCSROFF = .CSRPOS
 )FIELD

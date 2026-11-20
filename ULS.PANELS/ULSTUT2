@@ -7,10 +7,9 @@
  ULS uses an AREA(DYNAMIC) field. The exec builds fixed-width records
  containing a data set name, volume, migration flag, and device.
 +
- The panel binds that field to DYNAREA and DYNSHAD. Each row begins
- with an attribute byte so the exec can choose its display color.
- The shadow data marks the action column as an input field, allowing a
- B, E, V, or I selection on each displayed row.
+ The panel binds that field to DYNAREA and DYNSHAD. Each row starts
+ with a DATAIN attribute for the one-character action field, followed
+ by DATAOUT for the row text. DYNSHAD supplies optional display styling.
 +
  The exec rebuilds the visible slice before DISPLAY. Scroll verbs and
  the UP/DOWN commands move the first row; the dynamic area then shows
